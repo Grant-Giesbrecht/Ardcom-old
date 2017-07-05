@@ -1,0 +1,8 @@
+getParamValue	KEYWORD2
+setParamValue	KEYWORD2
+interpretPing	KEYWORD2
+performOperation	KEYWORD2
+recieve_float	KEYWORD2
+write_float	KEYWORD2
+recieve_char	KEYWORD2
+write_char	KEYWORD2
