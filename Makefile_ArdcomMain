@@ -1,0 +1,11 @@
+CC = clang++ -std=c++11
+
+all: ArdcomMain.cpp Ardcom.o
+	$(CC) -o acm ArdcomMain.cpp Ardcom.o
+
+Ardcom.o: Ardcom.cpp Ardcom.hpp
+	$(CC) -c Ardcom.cpp
+
+clean:
+	rm *.o
+
