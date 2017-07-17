@@ -3,11 +3,7 @@
 #ifndef _AARDRF24_H_
 #define _AARDRF24_H_
 
-// #include <SPI.h>
 #include "RF24.h"
-// #include <printf.h>
-// #include <nRF24L01.h>
-// #include <RF24_config.h>
 
 #define PACKET_SIZE 32
 #define MODE_MASTER 'M'
@@ -24,8 +20,8 @@
 #define KC_RESPONSE_TIME 1 //Set the maximum time for which the master will wait for a reply from the slave (in ms) (default = 2000)
 
 //#define commands for slave
-#define COM_EXECUTE 0
-#define COM_REPORT 1
+#define CMD_ACTION 0
+#define CMD_REPORT 1
 
 class AardRF24{
 

@@ -18,9 +18,6 @@ void AardRF24::begin(){
     //Initialize radio
     if (mode == MODE_MASTER){
         radio->begin();
-        // if (!radio->begin()){
-        //     return;
-        // }
         radio->setChannel(1);
         radio->setPALevel(RF24_PA_MAX);
         radio->setDataRate(RF24_1MBPS);
@@ -46,8 +43,6 @@ void AardRF24::begin(){
 
     radio->powerUp();
 }
-
-// void AardRF24::set(int property, bool value);
 
 void AardRF24::set(int property, void (*fn)(char*, char*)){
     switch(property){
@@ -76,7 +71,7 @@ bool AardRF24::send_packet(char command, char parameter_1, char parameter_2, cha
         packet[i+3] = data[i];
     }
 
-    AardRF24::send_packet(packet, output, error_code);
+    return AardRF24::send_packet(packet, output, error_code);
 }
 
 bool AardRF24::send_packet(char packet[32], char output[32], short* error_code){
@@ -126,18 +121,13 @@ bool AardRF24::send_packet(char packet[32], char output[32], short* error_code){
 
 bool AardRF24::read_available(char data[32], char output[32], short* error_code){
 
-    Serial.println("RA");
-
     if (radio->available()){ //If available...
-
-        Serial.println("AVailable!");
 
         radio->read(data, PACKET_SIZE); //Read
 
         radio->stopListening(); // (Prepare radio for sending)
 
         if (slave_callback != NULL){
-            Serial.println("Calling Callback");
             slave_callback(data, output);
         }
 
@@ -145,69 +135,18 @@ bool AardRF24::read_available(char data[32], char output[32], short* error_code)
             *error_code = SALVE_SEND_FAIL;
             radio->startListening();
             return false;
-        }else{
-            Serial.println("Wrote");
         }
 
         radio->startListening(); // (Prepare radio for listening)
 
-        }else{
-            *error_code = N_AVAIL; //Report that no data was available
-            return false;
-        }
+    }else{
+        *error_code = N_AVAIL; //Report that no data was available
+        return false;
+    }
 
     return true;
     
 }
-
-// bool AardRF24::read_available(char data[32], char output[32], short* error_code){
-
-//     // byte data[32];
-
-//     if (radio->available()){ //If available...
-
-//         radio->read(data, PACKET_SIZE); //Read
-
-//         // //Print recieved data
-//         // Serial.println("Read data from transciever");
-//         // Serial.print("\t");
-//         // Serial.println(String(data[3]));
-
-//         radio->stopListening(); // (Prepare radio for sending)
-
-//         data[3] += 7; // (Modify data to verify functionality of code)
-
-//         if (radio->write(data, PACKET_SIZE)){ //If write...
-
-//             //Print sent message
-//             // Serial.print("\tSent: ");
-//             // Serial.println(String(data[3]));
-            
-//         }else{ //Else (Write fails)...
-
-//             *error_code = SALVE_SEND_FAIL;
-//             radio->startListening();
-//             return false;
-//             //Print error
-//             // Serial.println("\tFailed to send response to Master");
-            
-//         }
-
-//         radio->startListening(); // (Prepare radio for listening)
-
-//     }
-
-//     return true;
-// }
-
-// bool AardRF24::read_available(short* error_code){
-
-//     byte in[32];
-//     byte out[32];
-
-//     read_available(in, out, error_code);
-
-// }
 
 void basic_callback(char data[32], char output[32]){
 
@@ -216,7 +155,7 @@ void basic_callback(char data[32], char output[32]){
     char parameter_1 = data[1];
     char parameter_2 = data[2];
 
-    if (command == COM_EXECUTE){
+    if (command == CMD_ACTION){
         // switch(parameter_1){
         //     case('7'):
         //         break;
@@ -225,7 +164,7 @@ void basic_callback(char data[32], char output[32]){
         //     case('9'):
         //         break;
         // }
-    }else if (command == COM_REPORT){
+    }else if (command == CMD_REPORT){
         switch(parameter_1){
             case('7'):
 
@@ -241,7 +180,6 @@ void basic_callback(char data[32], char output[32]){
                 break;
         }
     }
-
 }
 
 
