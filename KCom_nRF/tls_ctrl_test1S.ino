@@ -92,8 +92,10 @@ void three_link_swimmer_handler(char data[32], char output[32]){
           Serial.print("\t\t1023: ");
           Serial.print(String(v));
           Serial.print(" 255: ");
-          output[0] = (char)map(v, 0, 1023, 0, 255);
-          Serial.println(String((short)output[0]));
+          v *= .24926686; // 255/1023
+//          output[0] = (unsigned char)map(v, 0, 1023, 0, 255);
+          output[0] = (byte)(v);
+          Serial.println(String((byte)output[0]));
           break;
         default:
           Serial.print("\t\t");
